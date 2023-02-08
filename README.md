@@ -2,6 +2,10 @@
 
 PyTorch implementation for  WWW 2023 paper: Multi-Modal Self-Supervised Learning for Recommendation
 
+<p align="center">
+<img height=400 src="./MASL1.pdf" alt="SLMRec" />
+</p>
+
 
 ## Dependencies
 
