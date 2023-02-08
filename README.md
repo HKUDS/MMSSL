@@ -50,5 +50,5 @@ If you want to use our codes in your research, please cite:
 
 ## Acknowledgement
 
-The structure of this code is largely based on [LATTICE]([https://github.com/gusye1234/LightGCN-PyTorch](https://github.com/CRIPAC-DIG/LATTICE)). Thank for their work.
+The structure of this code is largely based on [LATTICE](https://github.com/CRIPAC-DIG/LATTICE). Thank for their work.
 
