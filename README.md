@@ -21,9 +21,9 @@ PyTorch implementation for  WWW 2023 paper: Multi-Modal Self-Supervised Learning
   ├─ MMSSL/ 
       ├── data/
       	├── baby/
-       ├── sports/
-       ├── tiktok/
-       ├── allrecopes/
+        ├── sports/
+        ├── tiktok/
+        ├── allrecopes/
   ```
 
 
