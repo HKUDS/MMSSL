@@ -27,7 +27,7 @@ PyTorch implementation for  WWW 2023 paper: Multi-Modal Self-Supervised Learning
   ```
 
 
-- We provide processed data [dropbox](https://www.dropbox.com/s/qrrm94ezzr0koqg/data.zip?dl=0) 
+- We provide processed data at [dropbox](https://www.dropbox.com/s/qrrm94ezzr0koqg/data.zip?dl=0) 
 
 ## Usage
 
