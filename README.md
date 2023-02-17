@@ -34,10 +34,8 @@ Supported datasets:  `Amazon-Baby`, `Amazon-Sports`, `Tiktok`, `Allrecipes`
   ```
   ├─ MMSSL/ 
       ├── data/
-      	├── baby/
-        ├── sports/
         ├── tiktok/
-        ├── allrecopes/
+        ...
   ```
   |    Dataset   |   |  Amazon  |      |   |          |      |   |  Tiktok  |     |     |   | Allrecipes |    |
 |:------------:|:-:|:--------:|:----:|:-:|:--------:|:----:|:-:|:--------:|:---:|:---:|:-:|:----------:|:--:|
