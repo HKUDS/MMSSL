@@ -47,7 +47,7 @@ Supported datasets:  `Amazon-Baby`, `Amazon-Sports`, `Tiktok`, `Allrecipes`
 |   Sparsity   |   | 99.961\% |      |   | 99.899\% |      |   | 99.904\% |     |     |   |  99.970\%  |    |
 
 
-- We provide processed data at [dropbox](https://www.dropbox.com/s/qrrm94ezzr0koqg/data.zip?dl=0) 
+- We provide processed data at [dropbox](https://www.dropbox.com/s/qrrm94ezzr0koqg/data.zip?dl=0). We spend a lot of time collecting datasets, if you want to use our datasets(especially Tiktok), please cite in the article.
 
 <h2> Experimental Results </h2>
 
@@ -86,7 +86,7 @@ Ablation study on key components of MMSSL
 |  w/o-CL |      0.0924     |      0.0408     |      0.0328     |      0.0130     |      0.0821     |      0.0351     |
 |  w/o-GT |      0.0929     |      0.0405     |      0.0325     |      0.0121     |      0.0815     |      0.0353     |
 | r/p-GAE |      0.0931     |      0.0411     |      0.0331     |      0.0126     |      0.0843     |      0.0364     |
-|  \model | 0.0962 | 0.0422 | 0.0367 | 0.0135 | 0.0921 | 0.0392 |
+|  MMSSL | 0.0962 | 0.0422 | 0.0367 | 0.0135 | 0.0921 | 0.0392 |
 
 
 <h1> Citing </h1>
@@ -94,31 +94,16 @@ Ablation study on key components of MMSSL
 If you find this work is helpful to your research, please consider citing our paper:
 
 ```
-@article{hou2022graphmae,
-  title={GraphMAE: Self-Supervised Masked Graph Autoencoders},
-  author={Hou, Zhenyu and Liu, Xiao and Cen, Yukuo and Dong, Yuxiao and Yang, Hongxia and Wang, Chunjie and Tang, Jie},
-  journal={arXiv e-prints},
-  pages={arXiv--2205},
-  year={2022}
-}
-```
-
-
-
-
-## Citation
-
-If you want to use our codes in your research, please cite:
 @inproceedings{,
   title={},
   author={},
   booktitle={},
   year={}
 }
-
 ```
 
-```
+
+
 
 ## Acknowledgement
 
