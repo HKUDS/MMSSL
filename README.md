@@ -81,7 +81,7 @@ Performance comparison of baselines on different datasets in terms of Recall@20,
 
 Ablation study on key components of MMSSL
 
-|      Data      |   Amazon-Baby                     |    Allrecipes                     |      Tiktok                       |
+|      Data      |   Amazon-Baby   ｜                |    Allrecipes  ｜                  |      Tiktok    ｜                 |
 |:--------------:|:---------------:|:---------------:|:---------------:|:---------------:|:---------------:|:---------------:|
 |     Metrics    |      Recall     |       NDCG      |      Recall     |       NDCG      |      Recall     |       NDCG      |
 |     w/o-ASL    |      0.0907     |      0.0396     |      0.0326     |      0.0124     |      0.0801     |      0.0358     |
