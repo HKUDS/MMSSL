@@ -47,11 +47,11 @@ Supported datasets:  `Amazon-Baby`, `Amazon-Sports`, `Tiktok`, `Allrecipes`
 |   Sparsity   |   | 99.961\% |      |   | 99.899\% |      |   | 99.904\% |     |     |   |  99.970\%  |    |
 
 
-- We provide processed data at [dropbox](https://www.dropbox.com/s/qrrm94ezzr0koqg/data.zip?dl=0). We spend a lot of time collecting datasets, if you want to use our datasets(especially Tiktok), please cite in the article.
+- We provide processed data at [dropbox](https://www.dropbox.com/s/qrrm94ezzr0koqg/data.zip?dl=0). We spend a lot of time collecting datasets, if you want to use our datasets(especially Tiktok), please 'cite' in the article.
 
 <h2> Experimental Results </h2>
 
-Performance comparison of baselines on different datasets in terms of Recall@20, Precision@20 and NDCG@20.:
+Performance comparison of baselines on different datasets in terms of Recall@20, Precision@20 and NDCG@20:
 
 |    Baseline    |        Tiktok        |                      |                      |           |      Amazon-Baby     |                      |                      |           |     Amazon-Sports    |                      |                      |           |      Allrecipes      |                      |                      |
 |:--------------:|:--------------------:|:--------------------:|:--------------------:|-----------|:--------------------:|:--------------------:|:--------------------:|-----------|:--------------------:|:--------------------:|:--------------------:|-----------|:--------------------:|:--------------------:|:--------------------:|
@@ -77,7 +77,7 @@ Performance comparison of baselines on different datasets in terms of Recall@20,
 
 
 
-Ablation study on key components of MMSSL
+Ablation study on key components of MMSSL:
 
 |      Data      |   Amazon-Baby   |                 |    Allrecipes   |                 |      Tiktok     |                 |
 |:--------------:|:---------------:|:---------------:|:---------------:|:---------------:|:---------------:|:---------------:|
