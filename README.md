@@ -47,7 +47,7 @@ Supported datasets:  `Amazon-Baby`, `Amazon-Sports`, `Tiktok`, `Allrecipes`
 |   Sparsity   |   | 99.961\% |      |   | 99.899\% |      |   | 99.904\% |     |     |   |  99.970\%  |    |
 
 
-- We provide processed data at [dropbox](https://www.dropbox.com/s/qrrm94ezzr0koqg/data.zip?dl=0). We spend a lot of time collecting datasets, if you want to use our datasets(especially Tiktok), please 'cite' in the article.
+- We provide processed data at [dropbox](https://www.dropbox.com/s/qrrm94ezzr0koqg/data.zip?dl=0). We spend a lot of time collecting datasets, if you want to use our datasets(especially Tiktok), please cite MMSSL in your paper.
 
 <h2> Experimental Results </h2>
 
