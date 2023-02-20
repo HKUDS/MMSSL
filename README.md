@@ -97,7 +97,7 @@ If you find this work is helpful to your research, please consider citing our pa
 @inproceedings{wei2023multi,
   title={Multi-Modal Self-Supervised Learning for Recommendation},
   author={Wei Wei, Chao Huang, Lianghao Xia, and Chuxu Zhang},
-  booktitle={Proceedings of the Web Conference 2023},
+  booktitle={Proceedings of the Web Conference (WWW)},
   year={2023}
 }
 ```
