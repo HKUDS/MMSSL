@@ -1,6 +1,6 @@
 # MMSSL: Multi-Modal Self-Supervised Learning for Recommendation
 
-PyTorch implementation for WWW 2023 paper [Multi-Modal Self-Supervised Learning for Recommendation](https://mmssl.files.wordpress.com/2023/02/3583206-2.pdf).
+PyTorch implementation for WWW 2023 paper [Multi-Modal Self-Supervised Learning for Recommendation](https://mmssl.files.wordpress.com/2023/02/3583206-3.pdf).
 
 <p align="center">
 <img src="./MMSSL.png" alt="MMSSL" />
