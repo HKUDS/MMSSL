@@ -91,7 +91,7 @@ Ablation study on key components of MMSSL:
 
 <h1> Citing </h1>
 
-If you find this work is helpful to your research, please consider citing our paper:
+If you find this work is helpful to your research, please kindely consider cite our paper:
 
 ```
 @inproceedings{wei2023multi,
