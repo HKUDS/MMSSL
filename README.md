@@ -49,6 +49,25 @@ Supported datasets:  `Amazon-Baby`, `Amazon-Sports`, `Tiktok`, `Allrecipes`
 
 - We provide processed data at [Google Drive](https://drive.google.com/drive/folders/1AB1RsnU-ETmubJgWLpJrXd8TjaK_eTp0?usp=share_link). We spend a lot of time collecting datasets, if you want to use our datasets(especially Tiktok), please cite MMSSL in your paper.
 
+```
+# datapreprocess
+  import json
+  from scipy.sparse import csr_matrix
+  n_user, n_item = 39387, 23033
+  f = open(args.data_path + args.dataset + '/train.json', 'r')  
+  train = json.load(f)
+  row, col = [], []
+  for index, value in enumerate(train.keys()):
+      for i in range(len(train[value])):
+          row.append(int(value))
+          col.append(train[value][i])
+  data = np.ones(len(row))
+  self.ui_graph = self.ui_graph_raw = csr_matrix((data, (row, col)), shape=(n_user, n_item))
+```
+
+
+
+
 <h2> Experimental Results </h2>
 
 Performance comparison of baselines on different datasets in terms of Recall@20, Precision@20 and NDCG@20:
