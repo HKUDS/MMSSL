@@ -121,15 +121,15 @@ If you find this work is helpful to your research, please kindely consider cite 
   year={2023}
 }
 ```
-or
-```
-@inproceedings{wei2023multi,
+<!-- or -->
+
+<!-- @inproceedings{wei2023multi,
   title={Multi-Modal Self-Supervised Learning for Recommendation},
   author={Wei, Wei and Huang, Chao and Xia, Lianghao and Zhang, Chuxu},
   booktitle={Proceedings of the Web Conference (WWW)},
   year={2023}
 }
-```
+ -->
 
 
 ## Acknowledgement
