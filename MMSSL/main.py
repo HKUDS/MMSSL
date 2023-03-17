@@ -23,7 +23,6 @@ from torch import autograd
 import copy
 
 
-
 from utility.parser import parse_args
 from Models import G_Model, D_Model, Discriminator
 from utility.batch_test import *
@@ -51,12 +50,12 @@ class Trainer(object):
         self.regs = eval(args.regs)
         self.decay = self.regs[0]
  
-        self.image_feats = np.load('/home/ww/Code/work5/MICRO2Ours/data/{}/image_feat.npy'.format(args.dataset))
-        self.text_feats = np.load('/home/ww/Code/work5/MICRO2Ours/data/{}/text_feat.npy'.format(args.dataset))
+        self.image_feats = np.load('/home/ww/Code/work5/MMSSL/data/{}/image_feat.npy'.format(args.dataset))
+        self.text_feats = np.load('/home/ww/Code/work5/MMSSL/data/{}/text_feat.npy'.format(args.dataset))
         self.image_feat_dim = self.image_feats.shape[-1]
         self.text_feat_dim = self.text_feats.shape[-1]
 
-        self.ui_graph = self.ui_graph_raw = pickle.load(open('/home/ww/Code/work5/MICRO2Ours/data/' + args.dataset + '/train_mat','rb'))
+        self.ui_graph = self.ui_graph_raw = pickle.load(open('/home/ww/Code/work5/MMSSL/data/' + args.dataset + '/train_mat','rb'))
 
         self.image_ui_graph_tmp = self.text_ui_graph_tmp = torch.tensor(self.ui_graph_raw.todense()).cuda()
         self.image_iu_graph_tmp = self.text_iu_graph_tmp = torch.tensor(self.ui_graph_raw.T.todense()).cuda()
@@ -366,7 +365,7 @@ class Trainer(object):
         stopping_step = 0
         should_stop = False
         cur_best_pre_0 = 0. 
-        # tb_writer = SummaryWriter(log_dir="/home/ww/Code/work5/MICRO2Ours/tensorboard/")
+        # tb_writer = SummaryWriter(log_dir="/home/ww/Code/work5/MMSSL/tensorboard/")
         # tensorboard_cnt = 0
 
         n_batch = data_generator.n_train // args.batch_size + 1
@@ -416,7 +415,7 @@ class Trainer(object):
                 u_ui = F.normalize(u_ui, dim=1)  
 
 
-                write_path = "/home/ww/Code/work5/MICRO2Ours/t_SNE_G/distribution/dir_draw"
+                write_path = "/home/ww/Code/work5/MMSSL/t_SNE_G/distribution/dir_draw"
                 write_data = ["u_ui", "image_u_sim_detach", "text_u_sim_detach"]
 
                 """
