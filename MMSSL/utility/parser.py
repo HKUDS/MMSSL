@@ -3,7 +3,7 @@ import argparse
 def parse_args():
     parser = argparse.ArgumentParser(description="")
 
-    #use less
+    #useless
     parser.add_argument('--verbose', type=int, default=5, help='Interval of evaluation.')    
     parser.add_argument('--core', type=int, default=5, help='5-core for warm-start; 0-core for cold start')
     parser.add_argument('--lambda_coeff', type=float, default=0.9, help='Lambda value of skip connection')
@@ -49,7 +49,7 @@ def parse_args():
     #train
     parser.add_argument('--data_path', nargs='?', default='/home/ww/Code/work5/MMSSL/data/', help='Input data path.')
     parser.add_argument('--seed', type=int, default=2022, help='Random seed')
-    parser.add_argument('--dataset', nargs='?', default='baby', help='Choose a dataset from {sports, baby, clothing, tiktok, allrecipes}')
+    parser.add_argument('--dataset', nargs='?', default='', help='Choose a dataset from {sports, baby, clothing, tiktok, allrecipes}')
     parser.add_argument('--epoch', type=int, default=1000, help='Number of epoch.')  #default: 1000
     parser.add_argument('--batch_size', type=int, default=1024, help='Batch size.')
     parser.add_argument('--embed_size', type=int, default=64,help='Embedding size.')                     
