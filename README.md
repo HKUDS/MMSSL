@@ -48,7 +48,7 @@ Supported datasets:  `Amazon-Baby`, `Amazon-Sports`, `Tiktok`, `Allrecipes`
 
 
 - `2023.3.23 update(all datasets uploaded)`: We provide the processed data at [Google Drive](https://drive.google.com/drive/folders/1AB1RsnU-ETmubJgWLpJrXd8TjaK_eTp0?usp=share_link). We spend a lot of time collecting datasets, if you want to use our datasets(especially Tiktok), please cite MMSSL in your paper.
-- `2023.3.10 update`: The official website of the `Tiktok` dataset has been closed. Thus, we also provide a 'large version' of the preprocessed [Tiktok-70710](https://drive.google.com/drive/folders/1hLvoS7F0R_K0HBixuS_OVXw_WbBxnshF?usp=share_link)  Again, we spent a lot of time pre-processing this dataset, so if you want to use our preprocessed Tiktok in your work please cite our paper.
+- `2023.3.10 update`: The official website of the `Tiktok` dataset has been closed. Thus, we also provide a 'large version' of the preprocessed [Tiktok-70710](https://drive.google.com/drive/folders/1hLvoS7F0R_K0HBixuS_OVXw_WbBxnshF?usp=share_link).  Again, we spent a lot of time pre-processing this dataset, so if you want to use our preprocessed Tiktok in your work please cite our paper.
 ```
 # datapreprocessing
 # #----part1: json2mat--------------------------------------------------------------------------------------------------
