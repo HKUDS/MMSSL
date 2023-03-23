@@ -14,7 +14,7 @@ MMSSL is a new multimedia recommender system MMSSL which integrates the generati
 * Python >= 3.9.13
 * [Pytorch](https://pytorch.org/) >= 1.13.0+cu116
 * [dgl-cuda11.6](https://www.dgl.ai/) >= 0.9.1post1
-* pyyaml == 5.4.1
+
 
 
 
