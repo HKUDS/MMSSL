@@ -50,19 +50,64 @@ Supported datasets:  `Amazon-Baby`, `Amazon-Sports`, `Tiktok`, `Allrecipes`
 - We provide processed data at [Google Drive](https://drive.google.com/drive/folders/1AB1RsnU-ETmubJgWLpJrXd8TjaK_eTp0?usp=share_link). We spend a lot of time collecting datasets, if you want to use our datasets(especially Tiktok), please cite MMSSL in your paper.
 - `2023.3.10 update`: The official website of the `Tiktok` dataset has been closed. Thus, we also provide a 'large version' of the preprocessed [Tiktok-70710](https://pan.baidu.com/s/10hhz1y7__XixcLo7MCTByQ?pwd=wiak) (Code: wiak).  Again, we spent a lot of time pre-processing this dataset, so if you want to use our preprocessed Tiktok in your work please cite our paper.
 ```
-# datapreprocess
-  import json
-  from scipy.sparse import csr_matrix
-  n_user, n_item = 39387, 23033
-  f = open(args.data_path + args.dataset + '/train.json', 'r')  
-  train = json.load(f)
-  row, col = [], []
-  for index, value in enumerate(train.keys()):
-      for i in range(len(train[value])):
-          row.append(int(value))
-          col.append(train[value][i])
-  data = np.ones(len(row))
-  self.ui_graph = self.ui_graph_raw = csr_matrix((data, (row, col)), shape=(n_user, n_item))
+# datapreprocessing
+# #----part1: json2mat--------------------------------------------------------------------------------------------------
+import json
+from scipy.sparse import csr_matrix
+import pickle
+import numpy as np
+n_user, n_item = 39387, 23033
+f = open('/home/weiw/Code/MM/MMSSL/data/clothing/train.json', 'r')  #^_^
+train = json.load(f)
+row, col = [], []
+for index, value in enumerate(train.keys()):
+    for i in range(len(train[value])):
+        row.append(int(value))
+        col.append(train[value][i])
+data = np.ones(len(row))
+train_mat = csr_matrix((data, (row, col)), shape=(n_user, n_item))
+pickle.dump(train_mat, open('/home/weiw/Code/MM/MMSSL/data/clothing/train_mat', 'wb'))  #^_^
+# # ----part1: json2mat--------------------------------------------------------------------------------------------------
+
+
+# ----part2: mat2json--------------------------------------------------------------------------------------------------
+# train_mat = pickle.load(open('/home/ww/Code/work5/Ours/data/tiktok/train_mat', 'rb'))
+test_mat = pickle.load(open('/home/ww/Code/work5/MMSSL/data/tiktok/test_mat603', 'rb'))
+# val_mat = pickle.load(open('/home/ww/Code/work5/Ours/data/tiktok/val_mat', 'rb'))
+
+# total_mat = train_mat + test_mat + val_mat
+total_mat =test_mat
+
+# total_mat = pickle.load(open('/home/ww/Code/work5/Ours/data/allrecipes/new_mat','rb'))
+# total_mat = pickle.load(open('/home/ww/Code/work5/Ours/data/tiktok/new_mat','rb'))
+total_array = total_mat.toarray()
+total_dict = {}
+
+for i in range(total_array.shape[0]):
+    total_dict[str(i)] = [index for index, value in enumerate(total_array[i]) if value!=0]
+
+new_total_dict = {}
+
+for i in range(len(total_dict)):
+    # if len(total_dict[str(i)])>1:
+    new_total_dict[str(i)]=total_dict[str(i)]
+
+# train_dict, test_dict = {}, {}
+
+# for i in range(len(new_total_dict)):
+#     train_dict[str(i)] = total_dict[str(i)][:-1]
+#     test_dict[str(i)] = [total_dict[str(i)][-1]]
+
+# train_json_str = json.dumps(train_dict)
+test_json_str = json.dumps(new_total_dict)
+
+# with open('/home/ww/Code/work5/Ours/data/allrecipes/new_train.json', 'w') as json_file:
+# # with open('/home/ww/Code/work5/Ours/data/tiktok/new_train_json', 'w') as json_file:
+#     json_file.write(train_json_str)
+with open('/home/ww/Code/work5/MMSSL/data/tiktok/test603.json', 'w') as test_file:
+# with open('/home/ww/Code/work5/Ours/data/tiktok/new_test_json', 'w') as test_file:
+    test_file.write(test_json_str)
+# ----part2: mat2json--------------------------------------------------------------------------------------------------
 ```
 
 
