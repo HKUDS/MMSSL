@@ -57,7 +57,7 @@ from scipy.sparse import csr_matrix
 import pickle
 import numpy as np
 n_user, n_item = 39387, 23033
-f = open('/home/weiw/Code/MM/MMSSL/data/clothing/train.json', 'r')  #^_^
+f = open('/home/weiw/Code/MM/MMSSL/data/clothing/train.json', 'r')  
 train = json.load(f)
 row, col = [], []
 for index, value in enumerate(train.keys()):
@@ -66,7 +66,7 @@ for index, value in enumerate(train.keys()):
         col.append(train[value][i])
 data = np.ones(len(row))
 train_mat = csr_matrix((data, (row, col)), shape=(n_user, n_item))
-pickle.dump(train_mat, open('./train_mat', 'wb'))  #^_^
+pickle.dump(train_mat, open('./train_mat', 'wb'))  
 # # ----json2mat--------------------------------------------------------------------------------------------------
 
 
