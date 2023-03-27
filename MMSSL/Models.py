@@ -48,11 +48,6 @@ class MMSSL(nn.Module):
         self.image_embedding = nn.Embedding.from_pretrained(torch.Tensor(image_feats), freeze=False)
         self.text_embedding = nn.Embedding.from_pretrained(torch.Tensor(text_feats), freeze=False)
 
-        self.image_gnn_trans = nn.Linear(args.embed_size, args.embed_size)
-        self.text_gnn_trans = nn.Linear(args.embed_size, args.embed_size)
-        nn.init.xavier_uniform_(self.image_gnn_trans.weight)
-        nn.init.xavier_uniform_(self.text_gnn_trans.weight)
-
         self.softmax = nn.Softmax(dim=-1)
         self.act = nn.Sigmoid()  
         self.sigmoid = nn.Sigmoid()
