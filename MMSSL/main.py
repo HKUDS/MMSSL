@@ -24,11 +24,14 @@ import copy
 
 
 from utility.parser import parse_args
-from Models import G_Model, D_Model, Discriminator
+from Models import MMSSL, Discriminator
 from utility.batch_test import *
 from utility.logging import Logger
 from utility.norm import build_sim, build_knn_normalized_graph
 from torch.utils.tensorboard import SummaryWriter
+
+import setproctitle
+setproctitle.setproctitle('EXP@weiw')
 
 args = parse_args()
 
@@ -50,90 +53,40 @@ class Trainer(object):
         self.regs = eval(args.regs)
         self.decay = self.regs[0]
  
-        self.image_feats = np.load('/home/ww/Code/work5/MMSSL/data/{}/image_feat.npy'.format(args.dataset))
-        self.text_feats = np.load('/home/ww/Code/work5/MMSSL/data/{}/text_feat.npy'.format(args.dataset))
+        self.image_feats = np.load(args.data_path + '{}/image_feat.npy'.format(args.dataset))
+        self.text_feats = np.load(args.data_path + '{}/text_feat.npy'.format(args.dataset))
         self.image_feat_dim = self.image_feats.shape[-1]
         self.text_feat_dim = self.text_feats.shape[-1]
-
-        self.ui_graph = self.ui_graph_raw = pickle.load(open('/home/ww/Code/work5/MMSSL/data/' + args.dataset + '/train_mat','rb'))
-
+        self.ui_graph = self.ui_graph_raw = pickle.load(open(args.data_path + args.dataset + '/train_mat','rb'))
         self.image_ui_graph_tmp = self.text_ui_graph_tmp = torch.tensor(self.ui_graph_raw.todense()).cuda()
         self.image_iu_graph_tmp = self.text_iu_graph_tmp = torch.tensor(self.ui_graph_raw.T.todense()).cuda()
-
         self.image_ui_index = {'x':[], 'y':[]}
         self.text_ui_index = {'x':[], 'y':[]}
-
         self.n_users = self.ui_graph.shape[0]
         self.n_items = self.ui_graph.shape[1]        
         self.iu_graph = self.ui_graph.T
-  
-        self.ui_graph_dgl = dgl.heterograph({('user','ui','item'):self.ui_graph.nonzero()})
-        self.iu_graph_dgl = dgl.heterograph({('user','ui','item'):self.iu_graph.nonzero()})
-
-        self.ui_graph = self.csr_norm(self.ui_graph, mean_flag=True)
-        self.iu_graph = self.csr_norm(self.iu_graph, mean_flag=True)
-        self.ui_graph = self.matrix_to_tensor(self.ui_graph)
-        self.iu_graph = self.matrix_to_tensor(self.iu_graph)
+        self.ui_graph = self.matrix_to_tensor(self.csr_norm(self.ui_graph, mean_flag=True))
+        self.iu_graph = self.matrix_to_tensor(self.csr_norm(self.iu_graph, mean_flag=True))
         self.image_ui_graph = self.text_ui_graph = self.ui_graph
         self.image_iu_graph = self.text_iu_graph = self.iu_graph
-
-        self.model_g = G_Model(self.n_users, self.n_items, self.emb_dim, self.weight_size, self.mess_dropout, self.image_feats, self.text_feats)      
-        self.model_d = D_Model(self.n_users, self.n_items, self.emb_dim, self.weight_size, self.mess_dropout, self.image_feats, self.text_feats)      
-        self.model_g = self.model_g.cuda()
-        self.model_d = self.model_d.cuda()
-
+        self.model = MMSSL(self.n_users, self.n_items, self.emb_dim, self.weight_size, self.mess_dropout, self.image_feats, self.text_feats)      
+        self.model = self.model.cuda()
         self.D = Discriminator(self.n_items).cuda()
         self.D.apply(self.weights_init)
-        self.optim_D = optim.Adam(self.D.parameters(), lr=args.D_lr, betas=(0.5, 0.9), weight_decay=args.weight_decay)  
         self.optim_D = optim.Adam(self.D.parameters(), lr=args.D_lr, betas=(0.5, 0.9))  
-
-        self.bce = nn.BCEWithLogitsLoss()
-        self.bce_loss = nn.BCELoss()        
-        self.feature_classifier_image = nn.Sequential()  
-        self.feature_classifier_image.add_module('d_fc1', nn.Linear(self.image_feat_dim, int(self.image_feat_dim/2)))
-        self.feature_classifier_image.add_module('d_bn1', nn.BatchNorm1d(int(self.image_feat_dim/2)))
-        self.feature_classifier_image.add_module('d_relu1', nn.ReLU(True))
-        self.feature_classifier_image.add_module('d_fc2', nn.Linear(int(self.image_feat_dim/2), 1))  
-        self.feature_classifier_image.add_module('d_sigmoid', nn.Sigmoid())
-        self.feature_classifier_image = self.feature_classifier_image.cuda()
-        self.feature_classifier_text = nn.Sequential()
-        self.feature_classifier_text.add_module('d_fc1', nn.Linear(self.text_feat_dim, int(self.text_feat_dim/2)))
-        self.feature_classifier_text.add_module('d_bn1', nn.BatchNorm1d(int(self.text_feat_dim/2)))
-        self.feature_classifier_text.add_module('d_relu1', nn.ReLU(True))
-        self.feature_classifier_text.add_module('d_fc2', nn.Linear(int(self.text_feat_dim/2), 1))  
-        self.feature_classifier_text.add_module('d_sigmoid', nn.Sigmoid())
-        self.feature_classifier_text = self.feature_classifier_text.cuda()
-
-        self.feature_classifier_common = nn.Sequential()
-        self.feature_classifier_common.add_module('d_fc1', nn.Linear(self.emb_dim, int(self.emb_dim/2)))
-        self.feature_classifier_common.add_module('d_bn1', nn.BatchNorm1d(int(self.emb_dim/2)))
-        self.feature_classifier_common.add_module('d_relu1', nn.ReLU(True))
-        self.feature_classifier_common.add_module('d_fc2', nn.Linear(int(self.emb_dim/2), 1))  
-        self.feature_classifier_common.add_module('d_sigmoid', nn.Sigmoid())
-        self.feature_classifier_common = self.feature_classifier_common.cuda()
 
         self.optimizer_D = optim.AdamW(
         [
-            {'params':self.model_d.parameters()},      #
+            {'params':self.model.parameters()},      
         ]
-            , lr=self.lr)  #
-
-        self.optimizer_G = optim.AdamW(
-        [
-            {'params':self.model_g.parameters()},
-        ]
-            , lr=self.lr)  #
-
-        self.scheduler_D, self.scheduler_G = self.set_lr_scheduler()
+            , lr=self.lr)  
+        self.scheduler_D = self.set_lr_scheduler()
 
 
     def set_lr_scheduler(self):
         fac = lambda epoch: 0.96 ** (epoch / 50)
-
         scheduler_D = optim.lr_scheduler.LambdaLR(self.optimizer_D, lr_lambda=fac)
-        scheduler_G = optim.lr_scheduler.LambdaLR(self.optimizer_G, lr_lambda=fac)
-
-        return scheduler_D, scheduler_G
+        return scheduler_D  
 
     def csr_norm(self, csr_mat, mean_flag=False):
         rowsum = np.array(csr_mat.sum(1))
@@ -348,9 +301,9 @@ class Trainer(object):
 
 
     def test(self, users_to_test, is_val):
-        self.model_d.eval()
+        self.model.eval()
         with torch.no_grad():
-            ua_embeddings, ia_embeddings, *rest = self.model_d(self.ui_graph, self.iu_graph, self.image_ui_graph, self.image_iu_graph, self.text_ui_graph, self.text_iu_graph)
+            ua_embeddings, ia_embeddings, *rest = self.model(self.ui_graph, self.iu_graph, self.image_ui_graph, self.image_iu_graph, self.text_ui_graph, self.text_iu_graph)
         result = test_torch(ua_embeddings, ia_embeddings, users_to_test, is_val)
         return result
 
@@ -365,7 +318,7 @@ class Trainer(object):
         stopping_step = 0
         should_stop = False
         cur_best_pre_0 = 0. 
-        # tb_writer = SummaryWriter(log_dir="/home/ww/Code/work5/MMSSL/tensorboard/")
+        # tb_writer = SummaryWriter(log_dir="/home/ww/Code/work5/MICRO2Ours/tensorboard/")
         # tensorboard_cnt = 0
 
         n_batch = data_generator.n_train // args.batch_size + 1
@@ -375,91 +328,49 @@ class Trainer(object):
             loss, mf_loss, emb_loss, reg_loss = 0., 0., 0., 0.
             contrastive_loss = 0.
             n_batch = data_generator.n_train // args.batch_size + 1
-            f_time, b_time, loss_time, opt_time, clip_time, emb_time = 0., 0., 0., 0., 0., 0.
             sample_time = 0.
-            build_item_graph = True
-
             self.gene_u, self.gene_real, self.gene_fake = None, None, {}
             self.topk_p_dict, self.topk_id_dict = {}, {}
 
             for idx in tqdm(range(n_batch)):
-                self.model_d.train()
-                self.model_g.train()
+                self.model.train()
                 sample_t1 = time()
                 users, pos_items, neg_items = data_generator.sample()
                 sample_time += time() - sample_t1       
 
                 with torch.no_grad():
                     ua_embeddings, ia_embeddings, image_item_embeds, text_item_embeds, image_user_embeds, text_user_embeds \
-                                    , user_emb, item_emb, image_user_id, text_user_id, image_item_id, text_item_id \
-                            = self.model_d(self.ui_graph, self.iu_graph, self.image_ui_graph, self.image_iu_graph, self.text_ui_graph, self.text_iu_graph)
-
-                ui_u_sim = self.u_sim_calculation(users, ua_embeddings, ia_embeddings)
-                image_u_sim = self.u_sim_calculation(users, image_user_embeds, image_item_embeds)
-                text_u_sim = self.u_sim_calculation(users, text_user_embeds, text_item_embeds)
-                ui_u_sim_detach = ui_u_sim.detach() 
-                image_u_sim_detach = image_u_sim.detach() 
-                text_u_sim_detach = text_u_sim.detach()
-
-
-
+                                    , _, _, _, _, _, _ \
+                            = self.model(self.ui_graph, self.iu_graph, self.image_ui_graph, self.image_iu_graph, self.text_ui_graph, self.text_iu_graph)
+                ui_u_sim_detach = self.u_sim_calculation(users, ua_embeddings, ia_embeddings).detach()
+                image_u_sim_detach = self.u_sim_calculation(users, image_user_embeds, image_item_embeds).detach()
+                text_u_sim_detach = self.u_sim_calculation(users, text_user_embeds, text_item_embeds).detach()
                 inputf = torch.cat((image_u_sim_detach, text_u_sim_detach), dim=0)
                 predf = (self.D(inputf))
-
                 lossf = (predf.mean())
                 u_ui = torch.tensor(self.ui_graph_raw[users].todense()).cuda()
-                noise = torch.empty((u_ui.shape[0], u_ui.shape[1]), dtype=torch.float32).uniform_(0,1).cuda()
-                logits_with_noise = u_ui - args.log_log_scale*torch.log(-torch.log(noise+1e-8)+1e-8)
-                u_ui = F.softmax(logits_with_noise/args.real_data_tau, dim=1) #0.002  
+                u_ui = F.softmax(u_ui - args.log_log_scale*torch.log(-torch.log(torch.empty((u_ui.shape[0], u_ui.shape[1]), dtype=torch.float32).uniform_(0,1).cuda()+1e-8)+1e-8)/args.real_data_tau, dim=1) #0.002  
                 u_ui += ui_u_sim_detach*args.ui_pre_scale                  
                 u_ui = F.normalize(u_ui, dim=1)  
-
-
-                write_path = "/home/ww/Code/work5/MMSSL/t_SNE_G/distribution/dir_draw"
-                write_data = ["u_ui", "image_u_sim_detach", "text_u_sim_detach"]
-
-                """
-                u_ui
-                noise
-                u_ui - log_log_noise
-                
-                """
-
                 inputr = torch.cat((u_ui, u_ui), dim=0)
                 predr = (self.D(inputr))
-
                 lossr = - (predr.mean())
-
                 gp = self.gradient_penalty(self.D, inputr, inputf.detach())
-
                 loss_D = lossr + lossf + args.gp_rate*gp 
-        
                 self.optim_D.zero_grad()
                 loss_D.backward()
                 self.optim_D.step()
                 line_d_loss.append(loss_D.detach().data)
 
                 G_ua_embeddings, G_ia_embeddings, G_image_item_embeds, G_text_item_embeds, G_image_user_embeds, G_text_user_embeds \
-                                , G_user_emb, G_item_emb, G_image_user_id, G_text_user_id, G_image_item_id, G_text_item_id \
-                        = self.model_d(self.ui_graph, self.iu_graph, self.image_ui_graph, self.image_iu_graph, self.text_ui_graph, self.text_iu_graph)
+                                , G_user_emb, _, G_image_user_id, G_text_user_id, _, _ \
+                        = self.model(self.ui_graph, self.iu_graph, self.image_ui_graph, self.image_iu_graph, self.text_ui_graph, self.text_iu_graph)
 
 
                 G_u_g_embeddings = G_ua_embeddings[users]
                 G_pos_i_g_embeddings = G_ia_embeddings[pos_items]
                 G_neg_i_g_embeddings = G_ia_embeddings[neg_items]
                 G_batch_mf_loss, G_batch_emb_loss, G_batch_reg_loss = self.bpr_loss(G_u_g_embeddings, G_pos_i_g_embeddings, G_neg_i_g_embeddings)
-       
-                G_image_u_g_embeddings = G_image_user_embeds[users]
-                G_image_pos_i_g_embeddings = G_image_item_embeds[pos_items]
-                G_image_neg_i_g_embeddings = G_image_item_embeds[neg_items]
-                G_image_batch_mf_loss, G_image_batch_emb_loss, G_image_batch_reg_loss = self.bpr_loss(G_image_u_g_embeddings, G_image_pos_i_g_embeddings, G_image_neg_i_g_embeddings)
-
-                G_text_u_g_embeddings = G_text_user_embeds[users]
-                G_text_pos_i_g_embeddings = G_text_item_embeds[pos_items]
-                G_text_neg_i_g_embeddings = G_text_item_embeds[neg_items]
-                G_text_batch_mf_loss, G_text_batch_emb_loss, G_text_batch_reg_loss = self.bpr_loss(G_text_u_g_embeddings, G_text_pos_i_g_embeddings, G_text_neg_i_g_embeddings)
-
-                G_ui_u_sim = self.u_sim_calculation(users, G_ua_embeddings, G_ia_embeddings)
                 G_image_u_sim = self.u_sim_calculation(users, G_image_user_embeds, G_image_item_embeds)
                 G_text_u_sim = self.u_sim_calculation(users, G_text_user_embeds, G_text_item_embeds)
                 G_image_u_sim_detach = G_image_u_sim.detach() 
@@ -488,10 +399,10 @@ class Trainer(object):
                     self.text_ui_index = {'x':[], 'y':[]}
 
                 else:
-                    image_ui_v, image_ui_id = torch.topk(G_image_u_sim_detach, int(self.n_items*args.m_topk_rate), dim=-1)
+                    _, image_ui_id = torch.topk(G_image_u_sim_detach, int(self.n_items*args.m_topk_rate), dim=-1)
                     self.image_ui_index['x'] += np.array(torch.tensor(users).repeat(1, int(self.n_items*args.m_topk_rate)).view(-1)).tolist()
                     self.image_ui_index['y'] += np.array(image_ui_id.cpu().view(-1)).tolist()
-                    text_ui_v, text_ui_id = torch.topk(G_text_u_sim_detach, int(self.n_items*args.m_topk_rate), dim=-1)
+                    _, text_ui_id = torch.topk(G_text_u_sim_detach, int(self.n_items*args.m_topk_rate), dim=-1)
                     self.text_ui_index['x'] += np.array(torch.tensor(users).repeat(1, int(self.n_items*args.m_topk_rate)).view(-1)).tolist()
                     self.text_ui_index['y'] += np.array(text_ui_id.cpu().view(-1)).tolist()
 
@@ -508,7 +419,7 @@ class Trainer(object):
                 G_predf = (self.D(G_inputf))
 
                 G_lossf = -(G_predf.mean())
-                batch_loss = G_batch_mf_loss + G_batch_emb_loss + G_batch_reg_loss + feat_emb_loss + args.G_rate*G_lossf+ args.cl_rate*batch_contrastive_loss  
+                batch_loss = G_batch_mf_loss + G_batch_emb_loss + G_batch_reg_loss + feat_emb_loss + args.cl_rate*batch_contrastive_loss + args.G_rate*G_lossf  #feat_emb_loss
 
                 line_var_loss.append(batch_loss.detach().data)
                 line_g_loss.append(G_lossf.detach().data)
@@ -563,12 +474,12 @@ class Trainer(object):
 
 
             if args.verbose > 0:
-                perf_str = 'Epoch %d [%.1fs + %.1fs]: train==[%.5f=%.5f + %.5f + %.5f], recall=[%.5f, %.5f, %.5f], ' \
-                           'precision=[%.5f, %.5f, %.5f], hit=[%.5f, %.5f, %.5f], ndcg=[%.5f, %.5f, %.5f]' % \
-                           (epoch, t2 - t1, t3 - t2, loss, mf_loss, emb_loss, reg_loss, ret['recall'][0], ret['recall'][1],
+                perf_str = 'Epoch %d [%.1fs + %.1fs]: train==[%.5f=%.5f + %.5f + %.5f], recall=[%.5f, %.5f, %.5f, %.5f], ' \
+                           'precision=[%.5f, %.5f, %.5f, %.5f], hit=[%.5f, %.5f, %.5f, %.5f], ndcg=[%.5f, %.5f, %.5f, %.5f]' % \
+                           (epoch, t2 - t1, t3 - t2, loss, mf_loss, emb_loss, reg_loss, ret['recall'][0], ret['recall'][1], ret['recall'][2],
                             ret['recall'][-1],
-                            ret['precision'][0], ret['precision'][1], ret['precision'][-1], ret['hit_ratio'][0], ret['hit_ratio'][1], ret['hit_ratio'][-1],
-                            ret['ndcg'][0], ret['ndcg'][1], ret['ndcg'][-1])
+                            ret['precision'][0], ret['precision'][1], ret['precision'][2], ret['precision'][-1], ret['hit_ratio'][0], ret['hit_ratio'][1], ret['hit_ratio'][2], ret['hit_ratio'][-1],
+                            ret['ndcg'][0], ret['ndcg'][1], ret['ndcg'][2], ret['ndcg'][-1])
                 self.logger.logging(perf_str)
 
             if ret['recall'][1] > best_recall:
