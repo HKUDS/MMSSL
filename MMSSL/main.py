@@ -30,8 +30,6 @@ from utility.logging import Logger
 from utility.norm import build_sim, build_knn_normalized_graph
 from torch.utils.tensorboard import SummaryWriter
 
-import setproctitle
-setproctitle.setproctitle('EXP@weiw')
 
 args = parse_args()
 
