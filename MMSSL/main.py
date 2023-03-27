@@ -423,7 +423,7 @@ class Trainer(object):
                 line_g_loss.append(G_lossf.detach().data)
                 line_cl_loss.append(batch_contrastive_loss.detach().data)
                              
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           #+ ssl_loss2 #+ batch_contrastive_loss
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
                 self.optimizer_D.zero_grad()  
                 batch_loss.backward(retain_graph=False)
                 self.optimizer_D.step()
