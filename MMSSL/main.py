@@ -450,7 +450,7 @@ class Trainer(object):
             t2 = time()
             users_to_test = list(data_generator.test_set.keys())
             users_to_val = list(data_generator.val_set.keys())
-            ret = self.test(users_to_test, is_val=False)  #^-^
+            ret = self.test(users_to_test, is_val=True)  
             training_time_list.append(t2 - t1)
 
             t3 = time()
