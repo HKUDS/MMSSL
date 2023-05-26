@@ -142,7 +142,7 @@ Performance comparison of baselines on different datasets in terms of Recall@20,
 
 <h1> Citing </h1>
 
-If you find this work is helpful to your research, please kindely consider cite our paper:
+If you find this work helpful to your research, please kindly consider citing our paper.
 
 
 ```
