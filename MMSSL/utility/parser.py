@@ -55,7 +55,7 @@ def parse_args():
     parser.add_argument('--embed_size', type=int, default=64,help='Embedding size.')                     
     parser.add_argument('--D_lr', type=float, default=3e-4, help='Learning rate.')
     parser.add_argument('--topk', type=int, default=10, help='K value of k-NN sparsification')  
-    parser.add_argument('--cf_model', nargs='?', default='slmrec', help='Downstream Collaborative Filtering model {mf, ngcf, lightgcn, vbpr, hafr, clcrec, slmrec}')   
+    parser.add_argument('--cf_model', nargs='?', default='slmrec', help='Downstream Collaborative Filtering model {mf}')   
     parser.add_argument('--debug', action='store_true')  
     parser.add_argument('--cl_rate', type=float, default=0.03, help='Control the effect of the contrastive auxiliary task')        
     parser.add_argument('--norm_type', nargs='?', default='sym', help='Adjacency matrix normalization operation') 
