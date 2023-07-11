@@ -147,10 +147,11 @@ If you find this work helpful to your research, please kindly consider citing ou
 
 ```
 @inproceedings{wei2023multi,
-title={Multi-Modal Self-Supervised Learning for Recommendation},
-author={Wei, Wei and Huang, Chao and Xia, Lianghao and Zhang, Chuxu},
-booktitle={Proceedings of the Web Conference (WWW)},
-year={2023}
+  title={Multi-Modal Self-Supervised Learning for Recommendation},
+  author={Wei, Wei and Huang, Chao and Xia, Lianghao and Zhang, Chuxu},
+  booktitle={Proceedings of the ACM Web Conference 2023},
+  pages={790--800},
+  year={2023}
 }
 ```
 <!-- or -->
