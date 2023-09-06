@@ -6,7 +6,7 @@ PyTorch implementation for WWW 2023 paper [Multi-Modal Self-Supervised Learning 
 <img src="./MMSSL.png" alt="MMSSL" />
 </p>
 
-MMSSL is a new multimedia recommender system MMSSL which integrates the generative modality-aware collaborative self-augmentation and the contrastive cross-modality dependency encoding. It achieves better performance than existing SOTA multi-model recommenders.
+MMSSL is a new multimedia recommender system which integrates the generative modality-aware collaborative self-augmentation and the contrastive cross-modality dependency encoding. It achieves better performance than existing SOTA multi-model recommenders.
 
 
 <h2>Dependencies </h2>
