@@ -24,7 +24,7 @@ Start training and inference as:
 
 ```
 cd MMSSL
-python main.py --dataset {DATASET}
+python ./main.py --dataset {DATASET}
 ```
 Supported datasets:  `Amazon-Baby`, `Amazon-Sports`, `Tiktok`, `Allrecipes`
 
