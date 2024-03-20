@@ -116,6 +116,65 @@ with open('./test.json', 'w') as test_file:
 ```
 
 
+<h3> Multi-modal Datasets </h3>
+🌹🌹 Please cite our paper if you use the 'netflix' dataset~ ❤️  
+
+We collected a multi-modal dataset using the original [Netflix Prize Data](https://www.kaggle.com/datasets/netflix-inc/netflix-prize-data) released on the [Kaggle](https://www.kaggle.com/) website. The data format is directly compatible with state-of-the-art multi-modal recommendation models like [LLMRec](https://github.com/HKUDS/LLMRec), [MMSSL](https://github.com/HKUDS/MMSSL), [LATTICE](https://github.com/CRIPAC-DIG/LATTICE), [MICRO](https://github.com/CRIPAC-DIG/MICRO), and others, without requiring any additional data preprocessing.
+
+ `Textual Modality:` We have released the item information curated from the original dataset in the "item_attribute.csv" file. Additionally, we have incorporated textual information enhanced by LLM into the "augmented_item_attribute_agg.csv" file. (The following three images represent (1) information about Netflix as described on the Kaggle website, (2) textual information from the original Netflix Prize Data, and (3) textual information augmented by LLMs.)
+<div style="display: flex; justify-content: center; align-items: flex-start;">
+  <figure style="text-align: center; margin: 10px;">
+   <img src="./image/textual_data1.png" alt="Image 1" style="width:270px;height:180px;">
+<!--     <figcaption>Textual data in original 'Netflix Prize Data' on Kaggle.</figcaption> -->
+  </figure>
+
+  <figure style="text-align: center; margin: 10px;">
+    <img src="./image/textual_data2.png" alt="Image 2" style="width:270px;height:180px;">
+<!--     <figcaption>Textual data in original 'Netflix Prize Data'.</figcaption> -->
+  </figure>
+
+  <figure style="text-align: center; margin: 10px;">
+    <img src="./image/textual_data3.png" alt="Image 2" style="width:270px;height:180px;">
+<!--     <figcaption>LLM-augmented textual data.</figcaption> -->
+  </figure>  
+</div>
+ 
+ `Visual Modality:` We have released the visual information obtained from web crawling in the "Netflix_Posters" folder. (The following image displays the poster acquired by web crawling using item information from the Netflix Prize Data.)
+ <div style="display: flex; justify-content: center; align-items: flex-start;">
+  <figure style="text-align: center; margin: 10px;">
+   <img src="./image/visiual_data1.png" alt="Image 1" style="width:690px;height:590px;">
+<!--     <figcaption>Textual data in original 'Netflix Prize Data' on Kaggle.</figcaption> -->
+  </figure>
+</div>
+ 
+
+<h3> Original Multi-modal Datasets & Augmented Datasets </h3>
+ <div style="display: flex; justify-content: center; align-items: flex-start;">
+  <figure style="text-align: center; margin: 10px;">
+   <img src="./image/datasets.png" alt="Image 1" style="width:480px;height:270px;">
+<!--     <figcaption>Textual data in original 'Netflix Prize Data' on Kaggle.</figcaption> -->
+  </figure>
+</div>
+
+
+<br>
+<p>
+
+<h3> Download the Netflix dataset. </h3>
+🚀🚀
+We provide the processed data (i.e., CF training data & basic user-item interactions, original multi-modal data including images and text of items, encoded visual/textual features and LLM-augmented text/embeddings).  🌹 We hope to contribute to our community and facilitate your research 🚀🚀 ~
+
+- `netflix`: [Google Drive Netflix](https://drive.google.com/drive/folders/1BGKm3nO4xzhyi_mpKJWcfxgi3sQ2j_Ec?usp=drive_link).  [🌟(Image&Text)](https://drive.google.com/file/d/1euAnMYD1JBPflx0M86O2M9OsbBSfrzPK/view?usp=drive_link)
+
+
+
+<h3> Encoding the Multi-modal Content. </h3>
+
+We use [CLIP-ViT](https://huggingface.co/openai/clip-vit-base-patch32) and [Sentence-BERT](https://www.sbert.net/) separately as encoders for visual side information and textual side information.
+
+
+
+
 
 
 <h2> Experimental Results </h2>
