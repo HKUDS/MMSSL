@@ -3,12 +3,12 @@ import argparse
 def parse_args():
     parser = argparse.ArgumentParser(description="")
 
-    parser.add_argument('--data_path', nargs='?', default='/root/autodl-tmp/Datasets/',
+    parser.add_argument('--data_path', nargs='?', default='../data',
                         help='Input data path.')
     parser.add_argument('--seed', type=int, default=123,
                         help='Random seed')
     parser.add_argument('--dataset', nargs='?', default='cloth',
-                        help='Choose a dataset from {grocery, cloth, sport, netflix, sports, baby, clothing}')
+                        help='Choose a dataset from {sports, baby, clothing}')
     parser.add_argument('--verbose', type=int, default=5,
                         help='Interval of evaluation.')
     parser.add_argument('--epoch', type=int, default=200,
