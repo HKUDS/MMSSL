@@ -54,67 +54,6 @@ Supported datasets:  `Amazon-Baby`, `Amazon-Sports`, `Tiktok`, `Allrecipes`
 
 🚀🚀 The provided dataset is compatible with multi-modal recommender models such as [MMSSL](https://github.com/HKUDS/MMSSL), [LATTICE](https://github.com/CRIPAC-DIG/LATTICE), and [MICRO](https://github.com/CRIPAC-DIG/MICRO) and requires no additional data preprocessing, including (1) basic user-item interactions and (2) multi-modal features.
 
-```
-# part of data preprocessing
-# #----json2mat--------------------------------------------------------------------------------------------------
-import json
-from scipy.sparse import csr_matrix
-import pickle
-import numpy as np
-n_user, n_item = 39387, 23033
-f = open('/home/weiw/Code/MM/MMSSL/data/clothing/train.json', 'r')  
-train = json.load(f)
-row, col = [], []
-for index, value in enumerate(train.keys()):
-    for i in range(len(train[value])):
-        row.append(int(value))
-        col.append(train[value][i])
-data = np.ones(len(row))
-train_mat = csr_matrix((data, (row, col)), shape=(n_user, n_item))
-pickle.dump(train_mat, open('./train_mat', 'wb'))  
-# # ----json2mat--------------------------------------------------------------------------------------------------
-
-
-# ----mat2json--------------------------------------------------------------------------------------------------
-# train_mat = pickle.load(open('./train_mat', 'rb'))
-test_mat = pickle.load(open('./test_mat', 'rb'))
-# val_mat = pickle.load(open('./val_mat', 'rb'))
-
-# total_mat = train_mat + test_mat + val_mat
-total_mat =test_mat
-
-# total_mat = pickle.load(open('./new_mat','rb'))
-# total_mat = pickle.load(open('./new_mat','rb'))
-total_array = total_mat.toarray()
-total_dict = {}
-
-for i in range(total_array.shape[0]):
-    total_dict[str(i)] = [index for index, value in enumerate(total_array[i]) if value!=0]
-
-new_total_dict = {}
-
-for i in range(len(total_dict)):
-    # if len(total_dict[str(i)])>1:
-    new_total_dict[str(i)]=total_dict[str(i)]
-
-# train_dict, test_dict = {}, {}
-
-# for i in range(len(new_total_dict)):
-#     train_dict[str(i)] = total_dict[str(i)][:-1]
-#     test_dict[str(i)] = [total_dict[str(i)][-1]]
-
-# train_json_str = json.dumps(train_dict)
-test_json_str = json.dumps(new_total_dict)
-
-# with open('./new_train.json', 'w') as json_file:
-# # with open('./new_train_json', 'w') as json_file:
-#     json_file.write(train_json_str)
-with open('./test.json', 'w') as test_file:
-# with open('./new_test_json', 'w') as test_file:
-    test_file.write(test_json_str)
-# ----mat2json--------------------------------------------------------------------------------------------------
-```
-
 
 <h3> Multi-modal Datasets </h3>
 🌹🌹 Please cite our paper if you use the 'netflix' dataset~ ❤️  
